@@ -991,6 +991,175 @@ nav a { display: inline-flex !important; align-items: center !important; min-hei
 @media(prefers-reduced-motion: reduce){ .marquee-track { animation-play-state: paused !important; } }
 @media(max-width:640px){ .marquee-track { animation-duration: 45s !important; } }
 
+
+/* ── STICKY FOOTER CTA BAR ── */
+.sticky-trial-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 200;
+  background: #1A1714;
+  border-top: 1px solid rgba(255,255,255,.10);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 -4px 24px rgba(0,0,0,.35);
+}
+.sticky-trial-bar.visible { transform: translateY(0); }
+.sticky-trial-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sticky-trial-copy strong {
+  font-size: .9375rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+.sticky-trial-copy span {
+  font-size: .75rem;
+  color: rgba(255,255,255,.50);
+}
+.sticky-trial-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.sticky-trial-bar .btn-primary {
+  min-height: 40px !important;
+  padding: 0 20px !important;
+  font-size: .875rem !important;
+  white-space: nowrap;
+}
+.sticky-trial-bar .btn-ghost {
+  min-height: 40px !important;
+  padding: 0 16px !important;
+  font-size: .875rem !important;
+  border-color: rgba(255,255,255,.25) !important;
+  color: rgba(255,255,255,.70) !important;
+  white-space: nowrap;
+}
+.sticky-trial-bar .btn-ghost:hover {
+  border-color: var(--orange) !important;
+  color: var(--orange) !important;
+}
+.sticky-trial-dismiss {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,.35);
+  min-width: 32px; min-height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  transition: color .2s;
+  flex-shrink: 0;
+  padding: 0;
+}
+.sticky-trial-dismiss:hover { color: rgba(255,255,255,.70); }
+.sticky-trial-dismiss svg { width: 14px; height: 14px; stroke: currentColor; }
+@media(max-width:640px){
+  .sticky-trial-bar { padding: 10px 16px; }
+  .sticky-trial-copy span { display: none; }
+  .sticky-trial-bar .btn-ghost { display: none; }
+  .sticky-trial-bar .btn-primary { font-size: .8125rem !important; padding: 0 16px !important; }
+}
+
+
+/* ── TIMELINE — left-aligned text, reduced margin ── */
+.timeline-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 16px !important;
+  padding: 24px 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+.timeline-item:last-child { border-bottom: none !important; }
+.timeline-left {
+  flex-shrink: 0 !important;
+  width: 32px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  padding-top: 4px !important;
+}
+.timeline-body {
+  flex: 1 !important;
+  text-align: left !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+.timeline-period {
+  font-size: .75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase !important;
+  color: var(--orange) !important;
+  margin-bottom: 6px !important;
+}
+.timeline-heading {
+  font-size: 1.0625rem !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+  margin-bottom: 8px !important;
+  line-height: 1.3 !important;
+  text-align: left !important;
+}
+.timeline-text {
+  font-size: 1rem !important;
+  line-height: 1.65 !important;
+  color: #444444 !important;
+  text-align: left !important;
+  margin-bottom: 12px !important;
+}
+.timeline-chips {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  justify-content: flex-start !important;
+}
+.compound-left {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+.compound-inner {
+  padding-left: 0 !important;
+}
+/* Reduce overall left indentation of the timeline section */
+#compound .container {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+.compound-inner.container {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+@media(max-width:640px){
+  .timeline-item { gap: 12px !important; }
+  .timeline-left { width: 24px !important; }
+}
+
+
+/* ── MOBILE NAV — show hamburger, hide desktop links ── */
+@media(max-width:1024px){
+  .nav-links { display: none !important; }
+  .nav-actions .btn-ghost { display: none !important; }
+  .nav-hamburger { display: flex !important; }
+}
+@media(min-width:1025px){
+  .nav-hamburger { display: none !important; }
+  .mobile-nav { display: none !important; }
+}
+
+
+/* ── BODY BOTTOM PAD for sticky trial bar ── */
+body { padding-bottom: 72px !important; }
+@media(max-width:640px){ body { padding-bottom: 64px !important; } }
+
 </style>
 </head>
 <body>
@@ -1642,8 +1811,59 @@ window.addEventListener('scroll', () => {
       cObserver.observe(el);
     });
   })();
+
+  // ── STICKY TRIAL BAR ──
+  (function(){
+    var bar = document.getElementById('stickyTrialBar');
+    var dismiss = document.getElementById('stickyTrialDismiss');
+    if(!bar) return;
+    var dismissed = sessionStorage.getItem('trialBarDismissed');
+    if(dismissed) return;
+    // Show bar after user scrolls past hero (~400px)
+    var shown = false;
+    window.addEventListener('scroll', function(){
+      if(!shown && window.scrollY > 400){
+        bar.classList.add('visible');
+        shown = true;
+      }
+    }, { passive: true });
+    if(dismiss){
+      dismiss.addEventListener('click', function(){
+        bar.classList.remove('visible');
+        sessionStorage.setItem('trialBarDismissed', '1');
+      });
+    }
+    // Hide when user reaches footer
+    var footer = document.querySelector('.footer');
+    if(footer){
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting) bar.style.opacity = '0';
+          else if(shown) bar.style.opacity = '1';
+        });
+      }, { threshold: 0.1 });
+      obs.observe(footer);
+    }
+  })();
+
 </script>
 
 <!-- Production-ready: 13 fixes applied per design audit 2026-04-24 -->
+
+<!-- STICKY TRIAL BAR -->
+<div class="sticky-trial-bar" id="stickyTrialBar" role="complementary" aria-label="Free trial offer">
+  <div class="sticky-trial-copy">
+    <strong>Start your 7-day free trial</strong>
+    <span>No credit card required &middot; Cancel anytime</span>
+  </div>
+  <div class="sticky-trial-actions">
+    <a href="#pricing" class="btn btn-ghost">See Plans</a>
+    <a href="#waitlist" class="btn btn-primary">Start Free Trial</a>
+  </div>
+  <button class="sticky-trial-dismiss" id="stickyTrialDismiss" aria-label="Dismiss">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
 </body>
 </html>
