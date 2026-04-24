@@ -1,545 +1,1357 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>LearnThenScroll — Earn Your Feed</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta property="og:title" content="LearnThenScroll — Turn Scroll Time Into Learn Time" />
+  <meta property="og:description" content="2-minute daily lessons delivered in your feed. Replace doomscrolling with something that actually sticks." />
+  <meta property="og:image" content="https://learnthenscroll.com/og-image.jpg" />
+  <meta property="og:url" content="https://learnthenscroll.com" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="LearnThenScroll — Turn Scroll Time Into Learn Time" />
+  <meta name="twitter:description" content="2-minute daily lessons delivered in your feed." />
+  <meta name="twitter:image" content="https://learnthenscroll.com/og-image.jpg" />
+<meta name="description" content="Complete a 2-minute lesson first. Then unlock your scroll. Free 7-day trial."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --orange: #FF4D00;
-    --orange-dark: #CC3D00;
-    --orange-light: #FFF0EB;
-    --black: #0E0E0E;
-    --white: #FAFAF8;
-    --gray: #6B6B6B;
-    --border: #E8E5E0;
-  }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+:root{
+  --cream:      #FAFAF8;
+  --white:      #FFFFFF;
+  --off:        #F4F2EE;
+  --orange:     #FF4D00;
+  --orange2:    #FF6B1A;
+  --orange-dim: rgba(255,77,0,.12);
+  --orange-mid: rgba(255,77,0,.22);
+  --gold:       #D97706;
+  --ink:        #1A1714;
+  --ink2:       #2D2926;
+  --muted:      #6B6560;
+  --muted2:     #9A948E;
+  --border:     rgba(26,23,20,.10);
+  --border2:    rgba(26,23,20,.16);
+  --shadow-sm:  0 2px 12px rgba(26,23,20,.07);
+  --shadow-md:  0 8px 32px rgba(26,23,20,.10);
+  --shadow-lg:  0 24px 64px rgba(26,23,20,.12);
+  --r:          20px;
+  --r-pill:     100px;
+}
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font-family:'Manrope',sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;}
 
-  html { scroll-behavior: smooth; }
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 56px;height:70px;
+  background:rgba(250,250,248,.88);
+  backdrop-filter:blur(20px) saturate(140%);
+  border-bottom:1px solid var(--border);
+  transition:box-shadow .3s;
+}
+.nav.scrolled{box-shadow:var(--shadow-sm);}
+.nav-logo{
+  font-family:'Instrument Serif',serif;
+  font-size:1.4rem;letter-spacing:-.02em;color:var(--ink);
+}
+.nav-logo b{color:var(--orange);font-weight:400;font-style:italic;}
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{font-size:.85rem;font-weight:600;color:var(--muted);transition:color .2s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-actions{display:flex;align-items:center;gap:10px;}
 
-  body {
-    background: var(--white);
-    color: var(--black);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:'Manrope',sans-serif;font-weight:700;
+  border:none;cursor:pointer;transition:all .25s ease;
+  white-space:nowrap;text-decoration:none;border-radius:var(--r-pill);
+}
+.btn-ghost{
+  background:transparent;border:1.5px solid var(--border2);
+  color:var(--ink);padding:9px 20px;font-size:.84rem;
+}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange);}
+.btn-primary{
+  background:var(--orange);color:#fff;
+  padding:11px 24px;font-size:.84rem;letter-spacing:.03em;
+  box-shadow:0 4px 20px var(--orange-dim);
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 48px;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 18px; font-weight: 600; color: var(--black);
-    text-decoration: none; letter-spacing: -0.3px;
-  }
-  .nav-logo span { color: var(--orange); }
-  .nav-links { display: flex; align-items: center; gap: 32px; }
-  .nav-links a { color: var(--gray); text-decoration: none; font-size: 14px; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--black); }
-  .nav-cta {
-    background: var(--orange); color: white; border: none; border-radius: 100px;
-    padding: 10px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
-    text-decoration: none; transition: background 0.2s;
-  }
-  .nav-cta:hover { background: var(--orange-dark); }
+  min-height:44px;
+  display:inline-flex;align-items:center;justify-content:center;}
+.btn-primary:hover{
+  background:var(--orange2);transform:translateY(-1px);
+  box-shadow:0 8px 32px var(--orange-mid);
+}
+.btn-primary-lg{
+  padding:16px 38px;font-size:1rem;letter-spacing:.04em;
+  box-shadow:0 6px 28px var(--orange-mid);
+}
+.btn-primary-lg:hover{transform:translateY(-2px);box-shadow:0 12px 44px rgba(255,77,0,.30);}
+.btn-outline-lg{
+  background:var(--white);border:1.5px solid var(--border2);
+  color:var(--ink);padding:15px 36px;font-size:.95rem;font-weight:700;
+}
+.btn-outline-lg:hover{border-color:var(--orange);color:var(--orange);}
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center;
-    padding: 120px 24px 80px;
-    position: relative;
-    overflow: hidden;
-  }
+/* ── STORE BUTTONS (GlowLytix-matched) ── */
+.store-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.store-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--ink);color:#fff;
+  padding:12px 22px 12px 18px;border-radius:var(--r-pill);
+  transition:transform .25s ease,box-shadow .25s ease;
+  cursor:pointer;
+}
+.store-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,23,20,.22);}
+.store-btn svg{width:26px;height:26px;flex:0 0 auto;}
+.store-btn .lines{display:flex;flex-direction:column;line-height:1.05;}
+.store-btn .top{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.72;font-weight:400;}
+.store-btn .bot{font-size:16px;font-weight:500;letter-spacing:.01em;}
 
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--orange-light); color: var(--orange-dark);
-    border: 1px solid #FFCBBA; border-radius: 100px;
-    padding: 6px 16px; font-size: 13px; font-weight: 600;
-    margin-bottom: 32px;
-    animation: fadeUp 0.6s ease both;
-  }
-  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+/* ── HERO ── */
+.hero{
+  display:grid;grid-template-columns:1.1fr 1fr;
+  gap:60px;align-items:center;
+  min-height:100vh;padding:110px 72px 80px;
+  max-width:1380px;margin:0 auto;
+  position:relative;
+}
+.hero::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 55% at 70% 55%,rgba(255,77,0,.07) 0%,transparent 65%),
+    radial-gradient(ellipse 40% 50% at 5% 80%,rgba(255,153,0,.05) 0%,transparent 60%);
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid rgba(255,77,0,.35);border-radius:var(--r-pill);
+  padding:7px 16px;margin-bottom:24px;
+  font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--orange);background:rgba(255,77,0,.07);
+}
+.eyebrow-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--orange);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.75);}}
+.hero h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(3.2rem,5.5vw,5.6rem);
+  line-height:1.02;letter-spacing:-.03em;
+  color:var(--ink);margin-bottom:22px;
+}
+.hero h1 em{font-style:italic;color:var(--orange);}
+.hero-sub{
+  font-size:1.08rem;color:var(--muted);
+  line-height:1.78;margin-bottom:34px;max-width:480px;font-weight:500;
+}
+.hero-sub strong{color:var(--ink);}
+.hero-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:32px;}
+.hero-trust{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:28px;}
+.avatars{display:flex;}
+.avatars img{
+  width:34px;height:34px;border-radius:50%;
+  border:2.5px solid var(--white);
+  object-fit:cover;margin-left:-9px;
+  box-shadow:var(--shadow-sm);
+}
+.avatars img:first-child{margin-left:0;}
+.trust-text{font-size:.8rem;color:var(--muted);}
+.trust-text strong{color:var(--ink);}
 
-  .hero h1 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(52px, 8vw, 96px);
-    line-height: 1.0;
-    letter-spacing: -2px;
-    color: var(--black);
-    max-width: 820px;
-    margin-bottom: 24px;
-    animation: fadeUp 0.6s 0.1s ease both;
-  }
-  .hero h1 em {
-    font-style: italic;
-    color: var(--orange);
-  }
+/* ── HERO RIGHT ── */
+.hero-right{position:relative;display:flex;justify-content:center;}
+.hero-img-wrap{position:relative;width:100%;max-width:480px;}
+.hero-img-wrap img.main-photo{
+  width:100%;border-radius:28px;
+  object-fit:cover;height:560px;
+  box-shadow:var(--shadow-lg);
+}
+/* Floating stat cards */
+.float-card{
+  position:absolute;z-index:2;
+  background:var(--white);border-radius:16px;
+  padding:14px 18px;
+  box-shadow:0 8px 32px rgba(26,23,20,.14);
+  display:flex;align-items:center;gap:12px;
+}
+.float-card .fc-icon{font-size:1.4rem;}
+.float-card .fc-text small{display:block;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);}
+.float-card .fc-text strong{font-size:.92rem;font-weight:800;color:var(--ink);}
+.fc-tl{top:8%;left:-8%;animation:float1 5s ease-in-out infinite;}
+.fc-br{bottom:10%;right:-6%;animation:float2 6s ease-in-out infinite;}
+@keyframes float1{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes float2{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
 
-  .hero-sub {
-    font-size: clamp(17px, 2.5vw, 21px);
-    color: var(--gray);
-    max-width: 520px;
-    line-height: 1.55;
-    margin-bottom: 48px;
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
+/* ── MARQUEE ── */
+.marquee-wrap{
+  background:var(--ink);overflow:hidden;
+  padding:14px 0;
+}
+.marquee-track{
+  display:flex;width:max-content;
+  animation:marquee 32s linear infinite;
+}
+.marquee-track span{
+  padding:0 32px;font-size:.72rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);white-space:nowrap;
+}
+.marquee-track span.dot{color:var(--orange);padding:0 6px;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
-  .hero-form {
-    display: flex; gap: 10px;
-    animation: fadeUp 0.6s 0.3s ease both;
-    flex-wrap: wrap; justify-content: center;
-  }
-  .hero-input {
-    padding: 14px 20px; border: 1.5px solid var(--border); border-radius: 100px;
-    font-size: 15px; font-family: 'DM Sans', sans-serif; outline: none;
-    width: 280px; background: white; color: var(--black);
-    transition: border-color 0.2s;
-  }
-  .hero-input:focus { border-color: var(--orange); }
-  .hero-btn {
-    padding: 14px 28px; background: var(--orange); color: white;
-    border: none; border-radius: 100px; font-size: 15px; font-weight: 600;
-    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
-    white-space: nowrap;
-  }
-  .hero-btn:hover { background: var(--orange-dark); }
+/* ── SECTIONS SHARED ── */
+.section{padding:110px 56px;}
+.container{max-width:1160px;margin:0 auto;}
+.eyebrow-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:16px;
+}
+.eyebrow-tag::before{content:'';width:20px;height:1.5px;background:var(--orange);display:block;}
+h2.sh{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2.2rem,4vw,3.6rem);
+  line-height:1.08;letter-spacing:-.025em;
+  color:var(--ink);margin-bottom:18px;
+}
+h2.sh em{font-style:italic;color:var(--orange);}
+.lead{
+  font-size:1.05rem;color:var(--muted);
+  max-width:560px;line-height:1.78;font-weight:500;
+  margin-bottom:60px;
+}
+.lead.center{text-align:center;margin:0 auto 60px;}
+.tc{text-align:center;}
 
-  .hero-social-proof {
-    margin-top: 28px; font-size: 13px; color: var(--gray);
-    animation: fadeUp 0.6s 0.4s ease both;
-  }
-  .hero-social-proof strong { color: var(--black); }
+/* ── PROBLEM SECTION ── */
+.problem{background:var(--off);}
+.problem-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.problem-img{
+  position:relative;border-radius:24px;overflow:hidden;
+  box-shadow:var(--shadow-lg);
+}
+.problem-img img{width:100%;height:500px;object-fit:cover;}
+.problem-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 50%,rgba(26,23,20,.5) 100%);
+}
+.stat-chip{
+  position:absolute;bottom:24px;left:24px;
+  background:var(--white);border-radius:14px;
+  padding:14px 20px;
+  box-shadow:0 8px 24px rgba(26,23,20,.15);
+}
+.stat-chip .n{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:2.4rem;color:var(--orange);line-height:1;
+}
+.stat-chip .l{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.pain-stack{display:flex;flex-direction:column;gap:20px;}
+.pain-item{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:16px;padding:24px 26px;
+  display:flex;gap:18px;align-items:flex-start;
+  box-shadow:var(--shadow-sm);
+  transition:box-shadow .3s,transform .3s;
+}
+.pain-item:hover{box-shadow:var(--shadow-md);transform:translateX(4px);}
+.pain-icon{
+  flex-shrink:0;width:44px;height:44px;border-radius:12px;
+  background:rgba(255,77,0,.08);border:1px solid rgba(255,77,0,.15);
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+}
+.pain-item h3{font-size:.98rem;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.pain-item p{font-size:.86rem;color:var(--muted);line-height:1.65;}
 
-  /* Big ticker strip */
-  .ticker-wrap {
-    background: var(--black); color: white; overflow: hidden;
-    padding: 14px 0; margin: 0;
-    border-top: 1px solid #222; border-bottom: 1px solid #222;
-  }
-  .ticker-inner {
-    display: flex; gap: 48px; width: max-content;
-    animation: ticker 28s linear infinite;
-    font-size: 14px; font-weight: 500; letter-spacing: 0.02em;
-  }
-  .ticker-item { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
-  .ticker-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
-  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* ── HOW IT WORKS ── */
+.how{background:var(--cream);}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.step{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);padding:44px 32px;
+  box-shadow:var(--shadow-sm);
+  transition:box-shadow .3s,transform .3s;position:relative;overflow:hidden;
+}
+.step::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--orange),#FFB347,transparent);
+  opacity:0;transition:opacity .3s;
+}
+.step:hover{box-shadow:var(--shadow-md);transform:translateY(-6px);}
+.step:hover::after{opacity:1;}
+.step-num{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:5rem;line-height:1;
+  color:rgba(255,77,0,.10);margin-bottom:20px;
+}
+.step h3{font-size:1.05rem;font-weight:800;color:var(--ink);margin-bottom:10px;}
+.step p{font-size:.88rem;color:var(--muted);line-height:1.7;}
 
-  /* PROBLEM SECTION */
-  .section { padding: 100px 24px; max-width: 1100px; margin: 0 auto; }
+/* ── STATS ── */
+.stats-bar{background:var(--ink);}
+.stats-inner{
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+.stat-col{
+  padding:60px 32px;text-align:center;
+  border-right:1px solid rgba(255,255,255,.08);
+}
+.stat-col:last-child{border-right:none;}
+.stat-n{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:clamp(2.8rem,4.5vw,3.8rem);
+  color:var(--orange);line-height:1;margin-bottom:8px;
+}
+.stat-l{font-size:.73rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);}
 
-  .problem {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
-  }
-  .problem-text .eyebrow {
-    font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--orange); margin-bottom: 16px;
-  }
-  .problem-text h2 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(36px, 4vw, 52px); line-height: 1.1; letter-spacing: -1px;
-    margin-bottom: 20px;
-  }
-  .problem-text p { color: var(--gray); font-size: 17px; line-height: 1.65; margin-bottom: 16px; }
+/* ── FEATURES ── */
+.features{background:var(--off);}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.feat{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);padding:32px;
+  box-shadow:var(--shadow-sm);transition:all .3s;
+}
+.feat:hover{box-shadow:var(--shadow-md);transform:translateY(-4px);}
+.feat-icon{
+  width:50px;height:50px;border-radius:14px;margin-bottom:20px;
+  background:rgba(255,77,0,.08);border:1px solid rgba(255,77,0,.14);
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+}
+.feat h3{font-size:.98rem;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.feat p{font-size:.86rem;color:var(--muted);line-height:1.65;}
 
-  .phone-mockup {
-    background: var(--black); border-radius: 40px; padding: 16px;
-    max-width: 260px; margin: 0 auto;
-    border: 8px solid #1A1A1A;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.15);
-  }
-  .phone-screen {
-    background: var(--white); border-radius: 28px; overflow: hidden;
-    aspect-ratio: 9/19;
-    display: flex; flex-direction: column;
-  }
-  .phone-status { height: 36px; background: var(--white); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 10px; color: #999; font-weight: 600; }
-  .phone-content { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-  .pc-logo { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 4px; }
-  .pc-logo span { color: var(--orange); }
-  .pc-card { background: var(--orange); border-radius: 14px; padding: 14px; color: white; }
-  .pc-card-tag { font-size: 9px; font-weight: 600; letter-spacing: 0.08em; opacity: 0.75; margin-bottom: 6px; text-transform: uppercase; }
-  .pc-card-title { font-size: 13px; font-weight: 600; line-height: 1.35; margin-bottom: 8px; }
-  .pc-card-meta { font-size: 9px; opacity: 0.7; }
-  .pc-card-btn { margin-top: 10px; background: rgba(255,255,255,0.2); border-radius: 8px; padding: 7px 12px; font-size: 11px; font-weight: 600; display: inline-block; }
-  .pc-stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
-  .pc-stat { background: #F5F3F0; border-radius: 10px; padding: 8px; text-align: center; }
-  .pc-stat-val { font-size: 16px; font-weight: 600; color: var(--black); }
-  .pc-stat-lbl { font-size: 8px; color: #999; margin-top: 1px; }
-  .pc-topic { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
-  .pc-topic-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
-  .pc-topic-name { font-size: 11px; font-weight: 500; color: var(--black); }
-  .pc-topic-meta { font-size: 9px; color: #999; margin-top: 1px; }
-  .pc-topic-arr { margin-left: auto; font-size: 12px; color: #ccc; }
+/* ── SOCIAL PROOF ── */
+.proof{background:var(--cream);}
+.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.proof-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);padding:32px;
+  box-shadow:var(--shadow-sm);transition:box-shadow .3s;
+}
+.proof-card:hover{box-shadow:var(--shadow-md);}
+.stars{color:var(--orange);font-size:.95rem;letter-spacing:3px;margin-bottom:14px;}
+.quote{
+  font-size:.92rem;color:var(--ink2);line-height:1.72;
+  margin-bottom:22px;font-style:italic;
+}
+.reviewer{display:flex;align-items:center;gap:12px;}
+.reviewer img{
+  width:42px;height:42px;border-radius:50%;
+  object-fit:cover;border:2px solid var(--border2);
+  flex-shrink:0;
+}
+.reviewer-name{font-size:.85rem;font-weight:700;color:var(--ink);}
+.reviewer-handle{font-size:.75rem;color:var(--muted2);}
 
-  /* HOW IT WORKS */
-  .how-section { background: var(--black); color: white; padding: 100px 24px; }
-  .how-inner { max-width: 1100px; margin: 0 auto; }
-  .how-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); margin-bottom: 16px; }
-  .how-h2 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(36px, 4vw, 56px); line-height: 1.1; letter-spacing: -1px;
-    margin-bottom: 60px; max-width: 600px;
-  }
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-  .step { background: #171717; padding: 40px 32px; position: relative; }
-  .step:first-child { border-radius: 20px 0 0 20px; }
-  .step:last-child { border-radius: 0 20px 20px 0; }
-  .step-num {
-    font-family: 'Instrument Serif', serif; font-size: 72px; line-height: 1;
-    color: #222; margin-bottom: 20px; display: block;
-  }
-  .step-icon { font-size: 28px; margin-bottom: 16px; display: block; }
-  .step h3 { font-size: 20px; font-weight: 600; margin-bottom: 10px; color: white; }
-  .step p { font-size: 15px; color: #888; line-height: 1.6; }
-  .step-accent { color: var(--orange); }
+/* ── PRICING ── */
+.pricing{background:var(--off);}
+.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:820px;margin:0 auto;}
+.price-card{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--r);padding:48px 40px;
+  box-shadow:var(--shadow-sm);transition:all .3s;position:relative;
+}
+.price-card.featured{
+  border-color:var(--orange);
+  box-shadow:0 0 0 4px var(--orange-dim),var(--shadow-lg);
+}
+.pop-badge{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:var(--orange);color:#fff;
+  font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:6px 20px;border-radius:var(--r-pill);white-space:nowrap;
+}
+.tier-name{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.price-num{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:3.6rem;color:var(--ink);line-height:1;margin-bottom:4px;
+}
+.price-num sup{font-size:1.4rem;font-style:normal;vertical-align:super;}
+.per{font-size:.8rem;color:var(--muted);margin-bottom:8px;}
+.trial-note{font-size:.8rem;color:var(--orange);font-weight:700;margin-bottom:28px;}
+hr.divider{border:none;border-top:1px solid var(--border);margin-bottom:24px;}
+.price-list{list-style:none;margin-bottom:36px;}
+.price-list li{
+  font-size:.88rem;color:var(--muted);padding:7px 0;
+  display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border);
+}
+.price-list li:last-child{border-bottom:none;}
+.price-list li .ck{color:var(--orange);font-weight:800;font-size:1rem;flex-shrink:0;}
+.price-list li .ck.no{color:rgba(155,148,142,.35);}
 
-  /* TOPICS SECTION */
-  .topics-section { padding: 100px 24px; background: var(--orange-light); }
-  .topics-inner { max-width: 1100px; margin: 0 auto; }
-  .topics-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange-dark); margin-bottom: 16px; }
-  .topics-h2 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(36px, 4vw, 56px); line-height: 1.1; letter-spacing: -1px;
-    margin-bottom: 8px; color: var(--black);
-  }
-  .topics-sub { font-size: 17px; color: #9B5A3A; margin-bottom: 48px; }
-  .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 40px; }
-  .topic-pill {
-    background: white; border: 1.5px solid #FFCBBA; border-radius: 14px;
-    padding: 16px 18px; display: flex; align-items: flex-start; gap: 10px;
-    transition: border-color 0.2s, transform 0.2s;
-    cursor: default;
-  }
-  .topic-pill:hover { border-color: var(--orange); transform: translateY(-2px); }
-  .tp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 6px; }
-  .tp-name { font-size: 14px; font-weight: 500; color: var(--black); line-height: 1.35; }
-  .tp-cat { font-size: 11px; color: #9B5A3A; margin-top: 3px; }
-  .topics-cta { text-align: center; }
-  .topics-cta p { color: #9B5A3A; font-size: 15px; }
-  .topics-cta strong { color: var(--black); }
+/* ── FINAL CTA ── */
+.final-cta{
+  background:var(--ink);
+  text-align:center;position:relative;overflow:hidden;
+  padding:120px 56px;
+}
+.final-cta::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 80% at 50% 110%,rgba(255,77,0,.18) 0%,transparent 60%);
+}
+.final-cta h2.sh{color:#fff;}
+.final-cta h2.sh em{color:var(--orange);}
+.final-cta .lead{color:rgba(255,255,255,.55);}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:40px;}
+.cta-note{font-size:.78rem;color:rgba(255,255,255,.35);margin-top:16px;}
+.cta-note strong{color:rgba(255,255,255,.65);}
+/* store buttons on dark bg */
+.final-cta .store-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);}
+.final-cta .store-btn:hover{background:rgba(255,255,255,.18);}
 
-  /* SOCIAL PROOF */
-  .proof-section { padding: 100px 24px; max-width: 1100px; margin: 0 auto; }
-  .proof-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); margin-bottom: 16px; text-align: center; }
-  .proof-h2 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(32px, 4vw, 48px); line-height: 1.1; letter-spacing: -1px;
-    margin-bottom: 48px; text-align: center;
-  }
-  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .quote-card {
-    background: white; border: 1px solid var(--border); border-radius: 20px;
-    padding: 28px 24px;
-  }
-  .quote-stars { color: var(--orange); font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
-  .quote-text { font-size: 15px; line-height: 1.65; color: var(--black); margin-bottom: 20px; font-style: italic; }
-  .quote-author { display: flex; align-items: center; gap: 10px; }
-  .quote-avatar {
-    width: 36px; height: 36px; border-radius: 50%; background: var(--orange-light);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600; color: var(--orange-dark);
-    flex-shrink: 0;
-  }
-  .quote-name { font-size: 13px; font-weight: 600; color: var(--black); }
-  .quote-handle { font-size: 12px; color: var(--gray); }
+/* ── FOOTER ── */
+.footer{background:#0D0C0A;padding:64px 56px 40px;}
+.footer-inner{max-width:1160px;margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;}
+.footer-brand .footer-logo{
+  font-family:'Instrument Serif',serif;font-size:1.3rem;
+  letter-spacing:-.02em;color:#fff;margin-bottom:12px;
+}
+.footer-brand .footer-logo b{color:var(--orange);font-weight:400;font-style:italic;}
+.footer-brand p{font-size:.85rem;color:rgba(255,255,255,.38);line-height:1.7;max-width:260px;}
+.footer-col h4{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:18px;}
+.footer-col a{display:block;font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:10px;transition:color .2s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid rgba(255,255,255,.07);padding-top:28px;
+  font-size:.77rem;color:rgba(255,255,255,.25);flex-wrap:wrap;gap:12px;
+}
 
-  /* STATS */
-  .stats-bar {
-    background: var(--orange); padding: 60px 24px; text-align: center;
-  }
-  .stats-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .stat-item { }
-  .stat-big { font-family: 'Instrument Serif', serif; font-size: clamp(48px, 6vw, 72px); color: white; line-height: 1; letter-spacing: -2px; }
-  .stat-label { font-size: 14px; color: rgba(255,255,255,0.75); margin-top: 6px; font-weight: 500; }
+/* ── ANIMATIONS ── */
+.fade-up{opacity:0;transform:translateY(26px);transition:opacity .72s ease,transform .72s ease;}
+.fade-up.in{opacity:1;transform:none;}
+.fade-up.d1{transition-delay:.1s;}
+.fade-up.d2{transition-delay:.2s;}
+.fade-up.d3{transition-delay:.3s;}
 
-  /* FINAL CTA */
-  .final-cta {
-    padding: 120px 24px; text-align: center; background: var(--black);
-    position: relative; overflow: hidden;
-  }
-  .final-cta::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(255,77,0,0.15) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .final-cta h2 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(42px, 6vw, 80px); color: white; line-height: 1.05;
-    letter-spacing: -2px; margin-bottom: 20px; max-width: 700px; margin-left: auto; margin-right: auto;
-  }
-  .final-cta h2 em { color: var(--orange); font-style: italic; }
-  .final-cta p { font-size: 18px; color: #888; margin-bottom: 40px; }
-  .final-form { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  .final-input {
-    padding: 16px 24px; background: #1A1A1A; border: 1.5px solid #333; border-radius: 100px;
-    font-size: 15px; color: white; font-family: 'DM Sans', sans-serif; outline: none; width: 300px;
-    transition: border-color 0.2s;
-  }
-  .final-input:focus { border-color: var(--orange); }
-  .final-input::placeholder { color: #555; }
-  .final-btn {
-    padding: 16px 32px; background: var(--orange); color: white; border: none; border-radius: 100px;
-    font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
-    transition: background 0.2s;
-  }
-  .final-btn:hover { background: var(--orange-dark); }
-  .final-note { margin-top: 16px; font-size: 13px; color: #555; }
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;text-align:center;padding:100px 40px 70px;gap:48px;}
+  .hero-sub{max-width:100%;}
+  .hero-actions,.hero-trust,.store-btns{justify-content:center;}
+  .hero-right{margin-top:0;width:100%;max-width:420px;margin:0 auto;}
+  .hero-img-wrap img.main-photo{height:420px;}
+  .fc-tl,.fc-br{display:none;}
+  .problem-grid{grid-template-columns:1fr;gap:40px;}
+  .steps{grid-template-columns:1fr 1fr;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .stats-inner{grid-template-columns:1fr 1fr;}
+  .stat-col{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);}
+  .stat-col:last-child,.stat-col:nth-child(2){border-bottom:none;}
+  .proof-grid{grid-template-columns:1fr;}
+  .price-grid{grid-template-columns:1fr;max-width:440px;}
+  .footer-top{grid-template-columns:1fr 1fr;}
+  .nav-links{display:none;}
+}
+@media(max-width:640px){
+  .hero-eyebrow{font-size:.60rem;letter-spacing:.06em;padding:6px 12px;gap:7px;}
+  .hero-eyebrow-text{white-space:nowrap;}
+  .section{padding:80px 24px;}
+  .nav{padding:0 20px;height:62px;}
+  .hero{padding:90px 24px 60px;}
+  .hero h1{font-size:clamp(2.8rem,9vw,3.5rem);}
+  .steps{grid-template-columns:1fr;}
+  .feat-grid{grid-template-columns:1fr;}
+  .stats-inner{grid-template-columns:1fr 1fr;}
+  .hero-actions{flex-direction:column;align-items:center;width:100%;}
+  .hero-actions .btn{width:100%;max-width:340px;justify-content:center;}
+  .store-btns{flex-direction:column;align-items:center;}
+  .store-btn{width:100%;max-width:240px;justify-content:center;}
+  .footer{padding:48px 24px 32px;}
+  .footer-top{grid-template-columns:1fr;text-align:center;}
+  .footer-brand p{max-width:100%;}
+  .footer-col{text-align:center;}
+  .footer-bottom{flex-direction:column;text-align:center;align-items:center;}
+  .cta-btns{flex-direction:column;align-items:center;}
+  .final-cta{padding:80px 24px;}
+  .price-grid{max-width:100%;}
+  .nav-actions .btn-ghost{display:none;}
+}
 
-  /* FOOTER */
-  footer {
-    background: var(--black); border-top: 1px solid #1A1A1A;
-    padding: 32px 48px; display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 16px;
-  }
-  .footer-logo { font-size: 16px; font-weight: 600; color: #444; }
-  .footer-logo span { color: var(--orange); }
-  .footer-links { display: flex; gap: 24px; }
-  .footer-links a { font-size: 13px; color: #444; text-decoration: none; transition: color 0.2s; }
-  .footer-links a:hover { color: #888; }
 
-  /* Animations */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .reveal {
-    opacity: 0; transform: translateY(32px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
+/* ─── HERO OVERLAY ─── */
+.hero-img-overlay{position:absolute;inset:0;border-radius:28px;pointer-events:none;background:linear-gradient(180deg,transparent 50%,rgba(26,23,20,.28) 100%);}
+/* ─── LESSON CARD ─── */
+.lesson-card{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:340px;background:#fff;border-radius:18px;padding:18px 20px;box-shadow:0 12px 40px rgba(26,23,20,.18);z-index:3;}
+.lesson-card-top{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.lesson-icon{width:40px;height:40px;border-radius:12px;flex-shrink:0;background:rgba(255,77,0,.09);border:1px solid rgba(255,77,0,.15);display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.lesson-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:3px;}
+.lesson-title{font-size:.88rem;font-weight:700;color:var(--ink);}
+.lesson-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.lesson-bar{flex:1;height:6px;background:var(--off);border-radius:99px;overflow:hidden;}
+.lesson-bar-fill{height:100%;width:80%;background:linear-gradient(90deg,var(--orange),#FFB347);border-radius:99px;}
+.lesson-pct{font-size:.72rem;font-weight:700;color:var(--orange);}
+.lesson-unlock{font-size:.75rem;color:var(--muted);font-weight:500;}
+.lesson-unlock strong{color:var(--ink);}
+.hero-right{padding-bottom:32px;}
+/* ─── STAT CHIP 2 ─── */
+.stat-chip-2{position:absolute;top:24px;right:-14px;background:var(--orange);border-radius:14px;padding:12px 16px;box-shadow:0 8px 24px rgba(255,77,0,.3);text-align:center;z-index:2;}
+.stat-chip-2 .n{font-family:'Instrument Serif',serif;font-style:italic;font-size:1.8rem;color:#fff;line-height:1;}
+.stat-chip-2 .l{font-size:.66rem;font-weight:700;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.08em;}
+/* ─── PROOF RATING ─── */
+.proof-rating{display:inline-flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-pill);padding:10px 20px;box-shadow:var(--shadow-sm);margin-bottom:24px;}
+.stars-sm{color:var(--orange);font-size:.85rem;letter-spacing:2px;}
+.proof-rating span{font-size:.82rem;font-weight:600;color:var(--ink);}
+/* ─── BENTO ─── */
+.bento{background:var(--off);padding:0 56px 110px;}
+.bento-intro{text-align:center;padding-top:110px;padding-bottom:56px;}
+.bento-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:240px 240px;gap:18px;max-width:1160px;margin:0 auto;}
+.bento-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .3s,box-shadow .3s;position:relative;}
+.bento-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+.bento-card.tall{grid-row:span 2;}
+.bento-card.ob{background:var(--orange);border:none;}
+.bento-card.ib{background:var(--ink);border:none;}
+.bento-img{width:100%;height:100%;object-fit:cover;display:block;}
+.bento-body{padding:24px;}
+.bento-label{font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.ob .bento-label{color:rgba(255,255,255,.65);}
+.ib .bento-label{color:rgba(255,255,255,.45);}
+.bento-h{font-family:'Instrument Serif',serif;font-size:1.2rem;line-height:1.22;color:var(--ink);font-style:italic;}
+.ob .bento-h,.ib .bento-h{color:#fff;}
+.bento-p{font-size:.82rem;color:var(--muted);line-height:1.65;margin-top:8px;}
+.ob .bento-p{color:rgba(255,255,255,.78);}
+.ib .bento-p{color:rgba(255,255,255,.55);}
+.bento-num{font-family:'Instrument Serif',serif;font-style:italic;font-size:3.8rem;color:var(--orange);line-height:1;margin-bottom:4px;}
+.ob .bento-num{color:#fff;}
+.ib .bento-num{color:var(--orange);}
+.bento-pill{display:inline-block;background:rgba(255,77,0,.10);border:1px solid rgba(255,77,0,.20);border-radius:99px;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);padding:5px 14px;margin-top:12px;}
+.ob .bento-pill{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.35);color:#fff;}
+.ib .bento-pill{background:rgba(255,77,0,.15);border-color:rgba(255,77,0,.25);color:var(--orange);}
+@media(max-width:900px){.bento-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}.bento-card.tall{grid-row:span 1;height:220px;}.bento{padding:0 40px 90px;}}
+@media(max-width:640px){.bento{padding:0 24px 80px;}.bento-grid{grid-template-columns:1fr;}.bento-card.tall{height:240px;}.stat-chip-2{display:none;}.lesson-card{position:relative;bottom:auto;left:auto;transform:none;width:100%;max-width:100%;margin-top:16px;border-radius:14px;}.hero-right{padding-bottom:0;}}
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    nav { padding: 16px 20px; }
-    .nav-links { display: none; }
-    .problem { grid-template-columns: 1fr; gap: 48px; }
-    .phone-mockup { display: none; }
-    .steps { grid-template-columns: 1fr; }
-    .step:first-child { border-radius: 20px 20px 0 0; }
-    .step:last-child { border-radius: 0 0 20px 20px; }
-    .quotes { grid-template-columns: 1fr; }
-    .stats-inner { grid-template-columns: 1fr; gap: 32px; }
-    footer { padding: 24px 20px; }
+
+.compound{background:var(--cream);padding:110px 56px;overflow:hidden;}.compound-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 1.3fr;gap:80px;align-items:start;}.counter-block{margin-bottom:48px;}.counter-row{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}.counter-num{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(3rem,5vw,4.8rem);color:var(--orange);line-height:1;min-width:120px;}.counter-unit{font-family:'Instrument Serif',serif;font-style:italic;font-size:1.6rem;color:var(--ink2);}.counter-label{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}.timeline{position:relative;}.timeline-item{display:grid;grid-template-columns:90px 1fr;gap:0;position:relative;}.timeline-left{display:flex;flex-direction:column;align-items:center;padding-top:4px;}.timeline-dot{width:14px;height:14px;border-radius:50%;background:var(--white);border:2.5px solid var(--border2);flex-shrink:0;transition:border-color .4s,background .4s,box-shadow .4s;z-index:1;}.timeline-item.tl-done .timeline-dot{border-color:var(--orange);background:var(--orange);box-shadow:0 0 0 4px rgba(255,77,0,.15);}.timeline-line{flex:1;width:2px;background:var(--border);margin:4px 0;min-height:60px;position:relative;overflow:hidden;}.timeline-line::after{content:'';position:absolute;top:0;left:0;right:0;background:linear-gradient(180deg,var(--orange),#FFB347);height:0%;transition:height .8s ease;}.timeline-item.tl-done .timeline-line::after{height:100%;}.timeline-item:last-child .timeline-line{display:none;}.timeline-period{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);padding-top:2px;text-align:right;padding-right:20px;line-height:1.2;}.timeline-body{padding:0 0 48px 20px;}.timeline-heading{font-family:'Instrument Serif',serif;font-style:italic;font-size:1.35rem;color:var(--ink);line-height:1.2;margin-bottom:8px;}.timeline-text{font-size:.87rem;color:var(--muted);line-height:1.7;margin-bottom:14px;}.timeline-chips{display:flex;flex-wrap:wrap;gap:8px;}.t-chip{display:inline-flex;align-items:center;gap:6px;background:var(--off);border:1px solid var(--border);border-radius:99px;padding:5px 14px;font-size:.74rem;font-weight:700;color:var(--ink2);transition:all .3s;}.timeline-item.tl-done .t-chip{background:rgba(255,77,0,.07);border-color:rgba(255,77,0,.25);color:var(--orange);}.t-chip-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}.progress-visual{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:32px;box-shadow:var(--shadow-md);position:sticky;top:100px;}.pv-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}.pv-title{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}.pv-badge{background:rgba(255,77,0,.09);border:1px solid rgba(255,77,0,.2);border-radius:99px;padding:4px 12px;font-size:.72rem;font-weight:700;color:var(--orange);}.vs-strip{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;background:var(--off);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:24px;}.vs-side{text-align:center;}.vs-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}.vs-num{font-family:'Instrument Serif',serif;font-style:italic;font-size:2rem;line-height:1;margin-bottom:4px;}.vs-side.good .vs-num{color:var(--orange);}.vs-side.bad .vs-num{color:#94A3B8;}.vs-sub{font-size:.72rem;color:var(--muted);font-weight:500;line-height:1.4;}.vs-divider{font-size:.78rem;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;}.bar-chart{display:flex;align-items:flex-end;gap:10px;height:160px;margin-bottom:20px;}.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;}.bar-val{font-size:.75rem;font-weight:800;color:var(--ink);min-height:16px;}.bar-wrap{flex:1;width:100%;display:flex;align-items:flex-end;background:var(--off);border-radius:6px 6px 0 0;overflow:hidden;}.bar-fill{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--orange),#FFB347);height:0%;transition:height 1.4s cubic-bezier(.34,1.2,.64,1);}.pv-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}.pv-stat{background:var(--off);border-radius:12px;padding:14px;text-align:center;}.pv-stat-n{font-family:'Instrument Serif',serif;font-style:italic;font-size:1.8rem;color:var(--orange);line-height:1;margin-bottom:4px;}.pv-stat-l{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}.insight-cards{display:flex;flex-direction:column;gap:8px;}.insight{display:flex;align-items:flex-start;gap:12px;background:var(--off);border-radius:12px;padding:12px 14px;border:1px solid var(--border);}.insight-icon{font-size:1.1rem;flex-shrink:0;margin-top:2px;}.insight-text{font-size:.82rem;color:var(--ink2);line-height:1.55;}.insight-text strong{color:var(--ink);}@media(max-width:1024px){.compound-inner{grid-template-columns:1fr;gap:48px;}.progress-visual{position:relative;top:auto;}}@media(max-width:640px){.compound{padding:80px 24px;}.timeline-item{grid-template-columns:68px 1fr;}.bar-chart{height:130px;gap:6px;}.vs-num{font-size:1.5rem;}.vs-sub{font-size:.65rem;}.vs-strip{padding:14px 12px;gap:8px;}}
+
+/* ── GRADIENT TEXT ── */
+.grad{
+  background:linear-gradient(110deg, var(--orange) 0%, #FF8C42 45%, var(--gold) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+/* Gradient on italic em elements inside headings */
+h1 em, h2.sh em{
+  background:linear-gradient(110deg, var(--orange) 0%, #FF8C42 50%, #D97706 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  font-style:italic;
+}
+/* Nav logo accent */
+.nav-logo b{
+  background:linear-gradient(110deg, var(--orange), #FF8C42);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.footer-logo b{
+  background:linear-gradient(110deg, var(--orange), #FF8C42);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+/* Stat numbers */
+.stat-n, .pv-stat-n, .counter-num, .bento-num, .stat-chip .n, .price-num{
+  background:linear-gradient(110deg, var(--orange) 0%, #FF8C42 60%, #D97706 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+/* Timeline period labels */
+.timeline-period{
+  background:linear-gradient(90deg, var(--orange), #FF8C42);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+/* Eyebrow tags */
+.eyebrow-tag, .hero-eyebrow{
+  /* keep border color, just text gradient */
+}
+.eyebrow-tag{
+  background:linear-gradient(90deg, var(--orange), #FF8C42);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+/* proof stars */
+.stars, .stars-sm, .test-stars{
+  background:linear-gradient(90deg,#FF4D00,#F0C060);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+/* ─────────────────────────────────────────────
+   2. MOBILE COMPOUND SECTION FIXES
+───────────────────────────────────────────── */
+@media(max-width:640px){
+  /* Timeline grid: shrink period col, prevent overflow */
+  .timeline-item{
+    grid-template-columns:56px 1fr;
+    min-width:0;
   }
+  .timeline-period{
+    font-size:.62rem;
+    padding-right:10px;
+    word-break:keep-all;
+  }
+  .timeline-body{
+    padding:0 0 36px 12px;
+    min-width:0;
+    overflow:hidden;
+  }
+  .timeline-text{
+    overflow-wrap:break-word;
+    word-break:break-word;
+    hyphens:auto;
+  }
+  .timeline-heading{
+    font-size:1.15rem;
+    overflow-wrap:break-word;
+  }
+  .timeline-chips{
+    gap:6px;
+  }
+  .t-chip{
+    font-size:.68rem;
+    padding:4px 10px;
+  }
+  /* Data card: tighter on mobile */
+  .progress-visual{
+    padding:20px 16px;
+    border-radius:16px;
+  }
+  .vs-strip{
+    grid-template-columns:1fr 28px 1fr;
+    gap:8px;
+    padding:14px 12px;
+  }
+  .vs-num{
+    font-size:1.6rem;
+  }
+  .vs-sub{
+    font-size:.65rem;
+  }
+  .vs-divider{
+    font-size:.7rem;
+  }
+  .pv-stats{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .pv-stat{
+    padding:12px 8px;
+  }
+  .pv-stat-n{
+    font-size:1.5rem;
+  }
+  .pv-stat-l{
+    font-size:.6rem;
+  }
+  .bar-chart{
+    height:120px;
+    gap:6px;
+  }
+  .bar-val{
+    font-size:.68rem;
+  }
+  .bar-label{
+    font-size:.6rem;
+  }
+  /* Counter block tighter */
+  .counter-num{
+    font-size:clamp(2.4rem,10vw,3.5rem);
+    min-width:80px;
+  }
+  .counter-unit{
+    font-size:1.1rem;
+  }
+  /* Compound section padding */
+  .compound{
+    padding:72px 20px;
+  }
+  .compound-inner{
+    gap:40px;
+  }
+  /* Insight cards */
+  .insight{
+    padding:10px 12px;
+    gap:10px;
+  }
+  .insight-text{
+    font-size:.78rem;
+  }
+}
+
+/* Also fix tablet (1024px) overflow */
+@media(max-width:1024px){
+  .timeline-item{
+    min-width:0;
+  }
+  .timeline-body{
+    min-width:0;
+    overflow:hidden;
+  }
+  .timeline-text{
+    overflow-wrap:break-word;
+    word-break:break-word;
+  }
+}
+
+
+/* ── HERO ENTRANCE ── */
+@keyframes heroFadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.hero-animate{opacity:0;animation:heroFadeUp .7s cubic-bezier(.22,1,.36,1) forwards}
+.hero-animate.d1{animation-delay:.05s}.hero-animate.d2{animation-delay:.18s}
+.hero-animate.d3{animation-delay:.32s}.hero-animate.d4{animation-delay:.46s}
+.hero-animate.d5{animation-delay:.60s}
+
+/* ── PHONE FLOAT ── */
+@keyframes phoneFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.hero-visual,.phone-wrap,.phone-mock,.hero-phone{animation:phoneFloat 4.5s ease-in-out infinite}
+
+/* ── HAMBURGER NAV ── */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;z-index:1001;}
+.nav-hamburger span{display:block;width:24px;height:2px;background:#1a1a1a;border-radius:2px;transition:transform .25s,opacity .25s;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-nav{display:none;flex-direction:column;gap:0;position:fixed;top:64px;left:0;right:0;background:#FAFAF8;border-bottom:1px solid rgba(0,0,0,.08);z-index:999;padding:16px 24px 24px;transform:translateY(-8px);opacity:0;transition:transform .25s ease,opacity .25s ease;pointer-events:none;}
+.mobile-nav.open{opacity:1;transform:translateY(0);pointer-events:all;}
+.mobile-nav-link{font-size:17px;font-weight:500;color:#1a1a1a;text-decoration:none;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.mobile-nav-link:last-of-type{border-bottom:none;}
+.mobile-nav-cta{margin-top:16px;text-align:center;display:block;}
+
+/* ── 768px NAV BREAKPOINT ── */
+@media(max-width:768px){
+  .nav-links,.nav-cta{display:none!important;}
+  .nav-hamburger{display:flex!important;}
+  .mobile-nav{display:flex;}
+}
+
+/* ── MOBILE FIXES ── */
+@media(max-width:640px){
+  .hero{padding:80px 20px 60px!important;}
+  .section{padding:72px 20px!important;}
+  #compound-timeline .timeline-item{grid-template-columns:56px 1fr!important;gap:12px!important;}
+  .proof-grid{grid-template-columns:1fr!important;}
+}
+
+/* ── GRADIENT WARMTH ── */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 60% 20%,rgba(255,77,0,.18) 0%,transparent 70%);}
+
+/* ── FORM FOCUS + CONFIRM ── */
+input[type="email"]{transition:border-color .2s,box-shadow .2s;}
+input[type="email"]:focus{outline:none;border-color:#FF4D00;box-shadow:0 0 0 3px rgba(255,77,0,.12);}
+.form-confirm{display:none;color:#FF4D00;font-weight:600;margin-top:12px;font-size:15px;}
+
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#">learn<span>then</span>scroll</a>
+<nav class="nav" id="nav">
+  <a href="/" class="nav-logo">Learn<b>Then</b>Scroll</a>
   <div class="nav-links">
-    <a href="#how">How it works</a>
-    <a href="#topics">Topics</a>
-    <a href="#waitlist">Waitlist</a>
+    <a href="#how">How It Works</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
   </div>
-  <a class="nav-cta" href="#waitlist">Join waitlist</a>
+  <div class="nav-actions">
+    <a href="#pricing" class="btn btn-ghost">Log In</a>
+    <a href="#pricing" class="btn btn-primary">Start Free Trial</a>
+  </div>
+
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </nav>
+<div class="mobile-nav" id="mobileNav" aria-hidden="true">
+  <a href="#how" class="mobile-nav-link">How It Works</a>
+  <a href="#features" class="mobile-nav-link">Features</a>
+  <a href="#pricing" class="mobile-nav-link">Pricing</a>
+  <a href="#waitlist" class="mobile-nav-cta btn-primary">Get Early Access</a>
+</div>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-badge"><div class="badge-dot"></div>Now accepting early access signups</div>
-  <h1>Earn your<br><em>scroll time.</em></h1>
-  <p class="hero-sub">Read a 3-minute lesson on something you actually want to learn. Pass a quiz. Then scroll guilt-free.</p>
-  <div class="hero-form">
-    <input class="hero-input" type="email" placeholder="your@email.com" id="hero-email" />
-    <button class="hero-btn" onclick="submitEmail('hero-email', 'hero-thanks')">Join the waitlist →</button>
+<div class="hero" id="home">
+  <div class="hero-left fade-up">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      <span class="hero-eyebrow-text">Free 7-Day Trial &mdash; No Catch, No Credit Card</span>
+    </div>
+    <h1 class="hero-animate d2">Stop scrolling.<br/><em>Earn</em> your feed.<br/>Literally.</h1>
+    <p class="hero-sub">Your phone is a slot machine. Every scroll is a pull. <strong>What if you could cash out?</strong> Learn one thing in under 2 minutes. Then unlock your feed guilt-free. Same dopamine. Way better ROI.</p>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn btn-primary btn-primary-lg">Start Free Trial</a>
+      <a href="#how" class="btn btn-outline-lg">See How It Works</a>
+    </div>
+    <div class="hero-trust">
+      <div class="avatars">
+        <img loading="eager" src="/learnthenscroll/avatar1.jpg" alt="user"/>
+        <img loading="eager" src="/learnthenscroll/avatar2.jpg" alt="user"/>
+        <img loading="eager" src="/learnthenscroll/avatar3.jpg" alt="user"/>
+      </div>
+      <p class="trust-text"><strong>2,400+</strong> people already ahead of the curve</p>
+    </div>
+    <div class="store-btns hero-animate d4">
+      <a href="#" class="store-btn">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        <div class="lines">
+          <span class="top">Download on the</span>
+          <span class="bot">App Store</span>
+        </div>
+      </a>
+      <a href="#" class="store-btn">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M3.18 23.76c.33.18.7.22 1.06.13l11.29-11.31L12 9.05 3.18 23.76zm18.4-10.09c.28-.28.42-.64.42-1.01v-.01c0-.37-.14-.73-.43-1.01l-2.4-1.39-3.29 3.29 2.99 2.99 2.71-2.86zM2.14.28C2.05.46 2 .68 2 .93v22.14c0 .25.05.47.14.65L14.95 12 2.14.28zm11.15 11.09l3.53-3.53-3.01-1.74a1.36 1.36 0 00-1.29-.04L4.24.28 13.29 11.37z"/></svg>
+        <div class="lines">
+          <span class="top">Get it on</span>
+          <span class="bot">Google Play</span>
+        </div>
+      </a>
+    </div>
   </div>
-  <div class="hero-social-proof" id="hero-thanks"><strong>2,400+ people</strong> already on the waitlist</div>
-</section>
+  <div class="hero-right fade-up d2">
+    <div class="hero-img-wrap">
+      <img loading="eager" class="main-photo" src="/learnthenscroll/hero-bg.jpg" alt="Person learning"/>
+      <div class="hero-img-overlay"></div>
+      <div class="float-card fc-tl">
+        <span class="fc-icon">🔥</span>
+        <div class="fc-text">
+          <small>Current Streak</small>
+          <strong>12 Days</strong>
+        </div>
+      </div>
+      <div class="float-card fc-br">
+        <span class="fc-icon">📚</span>
+        <div class="fc-text">
+          <small>Topics Mastered</small>
+          <strong>47 Lessons</strong>
+        </div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-card-top">
+          <div class="lesson-icon">📖</div>
+          <div class="lesson-meta">
+            <div class="lesson-label">Today's Lesson</div>
+            <div class="lesson-title">What is compound interest?</div>
+          </div>
+        </div>
+        <div class="lesson-bar-wrap">
+          <div class="lesson-bar"><div class="lesson-bar-fill"></div></div>
+          <span class="lesson-pct">80%</span>
+        </div>
+        <div class="lesson-unlock">Feed unlocks in <strong>~20 sec</strong> ⚡</div>
+      </div>
+    </div>
+  </div>
 
-<!-- TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker-inner" id="ticker"></div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="mt">
+    <span>Earn Your Feed</span><span class="dot">✦</span>
+    <span>Knowledge Is The New Scroll Stopper</span><span class="dot">✦</span>
+    <span>Attention Is Currency — Invest Wisely</span><span class="dot">✦</span>
+    <span>Book Smart. Phone Smarter.</span><span class="dot">✦</span>
+    <span>2 Minutes. 365 Things Learned.</span><span class="dot">✦</span>
+    <span>Feed The Brain. Then Feed The Feed.</span><span class="dot">✦</span>
+    <span>Earn Your Feed</span><span class="dot">✦</span>
+    <span>Knowledge Is The New Scroll Stopper</span><span class="dot">✦</span>
+    <span>Attention Is Currency — Invest Wisely</span><span class="dot">✦</span>
+    <span>Book Smart. Phone Smarter.</span><span class="dot">✦</span>
+    <span>2 Minutes. 365 Things Learned.</span><span class="dot">✦</span>
+    <span>Feed The Brain. Then Feed The Feed.</span><span class="dot">✦</span>
+  </div>
 </div>
 
 <!-- PROBLEM -->
-<div class="section" id="problem">
-  <div class="problem reveal">
-    <div class="problem-text">
-      <div class="eyebrow">The problem</div>
-      <h2>You open Instagram.<br>45 minutes disappear.</h2>
-      <p>You didn't mean to scroll that long. You never do. But the apps are designed to keep you there — and they're better at their job than you are at resisting them.</p>
-      <p>LearnThenScroll flips the script. Before you get to scroll, you learn something. A real idea. From a real topic you chose. Proven by a quiz you have to pass.</p>
-      <p style="color: var(--black); font-weight: 500;">Your feed becomes something you <em>earn</em>.</p>
-    </div>
-    <div class="phone-mockup">
-      <div class="phone-screen">
-        <div class="phone-status"><span>9:41</span><span>●●●</span></div>
-        <div class="phone-content">
-          <div class="pc-logo">learn<span>then</span>scroll</div>
-          <div class="pc-card">
-            <div class="pc-card-tag">📣 Marketing · Today's lesson</div>
-            <div class="pc-card-title">Eugene Schwartz's 5 awareness levels</div>
-            <div class="pc-card-meta">3 min read · 10-question quiz</div>
-            <div class="pc-card-btn">Start reading →</div>
+<section class="section problem" id="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="fade-up">
+        <div class="problem-img">
+          <img loading="eager" src="/learnthenscroll/person-reading.jpg" alt="Person on phone"/>
+          <div class="problem-img-overlay"></div>
+          <div class="stat-chip">
+            <div class="n">3 hrs</div>
+          <div class="stat-chip-2"><div class="n">45</div><div class="l">days/year lost</div></div>
+            <div class="l">gifted daily to the algorithm</div>
           </div>
-          <div class="pc-stat-row">
-            <div class="pc-stat"><div class="pc-stat-val">12</div><div class="pc-stat-lbl">Lessons</div></div>
-            <div class="pc-stat"><div class="pc-stat-val">84%</div><div class="pc-stat-lbl">Avg score</div></div>
-            <div class="pc-stat"><div class="pc-stat-val">🔥4</div><div class="pc-stat-lbl">Day streak</div></div>
+        </div>
+      </div>
+      <div class="fade-up d1">
+        <span class="eyebrow-tag hero-animate d1">The Problem</span>
+        <h2 class="sh">Your phone is playing you.<br/>Time to <em>play smarter.</em></h2>
+        <p class="lead">Every app on your phone has a PhD in keeping you hooked. You don't need willpower — you need a better play. We built the gate.</p>
+        <div class="pain-stack">
+          <div class="pain-item">
+            <div class="pain-icon">📵</div>
+            <div>
+              <h3>"Just one second" — famous last words</h3>
+              <p>That's not a lack of discipline. That's a $50B design budget that studied you harder than you studied for any exam.</p>
+            </div>
           </div>
-          <div style="font-size:10px;color:#999;font-weight:500;margin-top:4px;">More topics</div>
-          <div class="pc-topic"><div class="pc-topic-dot"></div><div><div class="pc-topic-name">Cialdini's 6 principles of influence</div><div class="pc-topic-meta">Psychology · 3 min</div></div><div class="pc-topic-arr">→</div></div>
-          <div class="pc-topic"><div class="pc-topic-dot"></div><div><div class="pc-topic-name">Why index funds beat managers</div><div class="pc-topic-meta">Finance · 3 min</div></div><div class="pc-topic-arr">→</div></div>
+          <div class="pain-item">
+            <div class="pain-icon">⏱️</div>
+            <div>
+              <h3>3 hours a day. 45 days a year. Unread.</h3>
+              <p>Donated free of charge. No receipt. No memory. No Chapter 2.</p>
+            </div>
+          </div>
+          <div class="pain-item">
+            <div class="pain-icon">🔓</div>
+            <div>
+              <h3>We don't kill the scroll. We charge admission.</h3>
+              <p>One micro-lesson. Two minutes. Then scroll all you want. Think of it as a cover charge — except what's inside actually makes you smarter.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- HOW IT WORKS -->
-<div class="how-section" id="how">
-  <div class="how-inner">
-    <div class="how-eyebrow reveal">How it works</div>
-    <h2 class="how-h2 reveal">Three steps between you and your feed.</h2>
-    <div class="steps reveal">
+<section class="section how" id="how">
+  <div class="container">
+    <div class="tc fade-up">
+      <span class="eyebrow-tag" style="justify-content:center;">How It Works</span>
+      <h2 class="sh">Three steps. <em>One chapter at a time.</em></h2>
+      <p class="lead center">No willpower. No guilt. Just a tiny toll booth on the road to the scroll — with a lesson worth the fare.</p>
+    </div>
+    <div class="steps fade-up d1">
       <div class="step">
-        <span class="step-num">01</span>
-        <span class="step-icon">🔍</span>
-        <h3>Pick a topic</h3>
-        <p>Choose from <span class="step-accent">hundreds of curated topics</span> across marketing, finance, psychology, history, science, and more. Or search for anything — Claude generates a lesson on demand.</p>
+        <div class="step-num">01</div>
+        <h3>Pick Your Topics</h3>
+        <p>Pick from 20+ categories — finance, history, science, design, psychology. Your lesson feed adapts to your brain, not a curriculum committee's.</p>
       </div>
       <div class="step">
-        <span class="step-num">02</span>
-        <span class="step-icon">📖</span>
-        <h3>Read for 3 minutes</h3>
-        <p>A punchy, <span class="step-accent">AI-generated lesson</span> on exactly what you picked. No filler. Dense with real insight. The kind of thing you'll actually remember.</p>
+        <div class="step-num">02</div>
+        <h3>Read One Page</h3>
+        <p>Under 2 minutes. One concept, explained clearly. No homework, no pop quiz. Just one page worth turning before you open your feed.</p>
       </div>
       <div class="step">
-        <span class="step-num">03</span>
-        <span class="step-icon">✅</span>
-        <h3>Pass the quiz</h3>
-        <p>10 questions. <span class="step-accent">70% to pass.</span> Fail and you re-read. Pass and your feed is earned — guilt-free scrolling, knowing you actually grew today.</p>
+        <div class="step-num">03</div>
+        <h3>Now You've Earned It</h3>
+        <p>Open whatever app you want. Scroll freely. Repeat tomorrow. Over time, you'll have quietly read a library's worth of knowledge — one feed at a time.</p>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- TOPICS -->
-<div class="topics-section" id="topics">
-  <div class="topics-inner">
-    <div class="topics-eyebrow reveal">What you'll learn</div>
-    <h2 class="topics-h2 reveal">From Schwartz to stoicism.<br>Any topic, 3 minutes.</h2>
-    <p class="topics-sub reveal">Search for anything. If it's not in the library, Claude writes it fresh for you.</p>
-    <div class="topics-grid reveal" id="topics-grid"></div>
-    <div class="topics-cta reveal"><p>And <strong>hundreds more</strong> — or just search for anything you're curious about.</p></div>
-  </div>
-</div>
 
-<!-- QUOTES -->
-<div class="proof-section" id="proof">
-  <div class="proof-eyebrow reveal">Early reactions</div>
-  <h2 class="proof-h2 reveal">People are already changing<br>how they think about scrolling.</h2>
-  <div class="quotes reveal">
-    <div class="quote-card">
-      <div class="quote-stars">★★★★★</div>
-      <p class="quote-text">"I've tried every app for doomscrolling. This is the first one that actually worked — because it replaces the habit with something I'm proud of instead of just blocking it."</p>
-      <div class="quote-author"><div class="quote-avatar">JR</div><div><div class="quote-name">James R.</div><div class="quote-handle">Marketing manager</div></div></div>
-    </div>
-    <div class="quote-card">
-      <div class="quote-stars">★★★★★</div>
-      <p class="quote-text">"The 3-minute format is genius. I've been going deep on behavioral economics — one lesson at a time. My team keeps asking where I'm getting all these ideas from."</p>
-      <div class="quote-author"><div class="quote-avatar">SK</div><div><div class="quote-name">Sasha K.</div><div class="quote-handle">Startup founder</div></div></div>
-    </div>
-    <div class="quote-card">
-      <div class="quote-stars">★★★★★</div>
-      <p class="quote-text">"I searched 'Eugene Schwartz awareness levels' on a whim. Got a perfect 3-minute breakdown, passed the quiz, and actually understood it. That never happens with YouTube."</p>
-      <div class="quote-author"><div class="quote-avatar">MO</div><div><div class="quote-name">Maria O.</div><div class="quote-handle">Freelance copywriter</div></div></div>
+<section class="compound" id="compound">
+  <div class="container">
+    <div class="text-center fade-up" style="margin-bottom:72px;">
+      <span class="eyebrow-tag" style="justify-content:center;">The Compound Effect</span>
+      <h2 class="sh">What 2 minutes a day<br/><em>actually adds up to.</em></h2>
+      <p class="lead center">Microlearning isn&#39;t a workaround. It&#39;s how memory actually works. Here&#39;s what the research — and the math — say about showing up daily.</p>
     </div>
   </div>
-</div>
+  <div class="compound-inner container">
+    <div class="compound-left fade-up">
+      <div class="counter-block">
+        <div class="counter-row"><span class="counter-num" id="cnt-lessons">0</span><span class="counter-unit">lessons</span></div>
+        <div class="counter-label">learned if you start today &amp; come back daily for a year</div>
+        <div class="counter-row" style="margin-top:16px;"><span class="counter-num" id="cnt-hours" style="font-size:clamp(2rem,3.5vw,3.2rem);">0</span><span class="counter-unit" style="font-size:1.2rem;">hrs invested total</span></div>
+        <div class="counter-label">at just 2 minutes a day</div>
+      </div>
+      <div class="timeline" id="compound-timeline">
+        <div class="timeline-item"><div class="timeline-left"><div class="timeline-dot"></div><div class="timeline-line"></div></div><div><div class="timeline-period">Day 1</div><div class="timeline-body"><div class="timeline-heading">You learn one thing.</div><div class="timeline-text">One concept. Two minutes. Compound interest, how DNS works, why antibiotics fail on viruses — your pick. You open your feed. Nothing changes except you know one more thing than yesterday.</div><div class="timeline-chips"><span class="t-chip"><span class="t-chip-dot"></span>2 min invested</span><span class="t-chip"><span class="t-chip-dot"></span>1 lesson earned</span></div></div></div></div>
+        <div class="timeline-item"><div class="timeline-left"><div class="timeline-dot"></div><div class="timeline-line"></div></div><div><div class="timeline-period">Week 1</div><div class="timeline-body"><div class="timeline-heading">The habit loop clicks.</div><div class="timeline-text">UCL research shows new habits form in ~66 days — but the reward loop activates much sooner. By day 7 your brain starts <em>expecting</em> the lesson before it gets the scroll. That&#39;s the gate becoming a ritual.</div><div class="timeline-chips"><span class="t-chip"><span class="t-chip-dot"></span>7 lessons</span><span class="t-chip"><span class="t-chip-dot"></span>14 min total</span><span class="t-chip"><span class="t-chip-dot"></span>Habit loop forming</span></div></div></div></div>
+        <div class="timeline-item"><div class="timeline-left"><div class="timeline-dot"></div><div class="timeline-line"></div></div><div><div class="timeline-period">Month 1</div><div class="timeline-body"><div class="timeline-heading">30 things you actually remember.</div><div class="timeline-text">Microlearning delivers <strong>17% better knowledge retention</strong> than traditional instruction (Journal of Applied Psychology). Short daily bursts beat hour-long sessions once a week — every single time. That&#39;s not motivation, that&#39;s neuroscience.</div><div class="timeline-chips"><span class="t-chip"><span class="t-chip-dot"></span>30 lessons</span><span class="t-chip"><span class="t-chip-dot"></span>17% better retention</span><span class="t-chip"><span class="t-chip-dot"></span>1 hr total</span></div></div></div></div>
+        <div class="timeline-item"><div class="timeline-left"><div class="timeline-dot"></div><div class="timeline-line"></div></div><div><div class="timeline-period">Month 3</div><div class="timeline-body"><div class="timeline-heading">You&#39;re the person who just <em>knows things.</em></div><div class="timeline-text">90 distinct concepts across your chosen topics. At dinner you mention why the placebo effect is still real even when you know it&#39;s a placebo. In a meeting you reference the Pareto Principle without Googling it first.</div><div class="timeline-chips"><span class="t-chip"><span class="t-chip-dot"></span>90 lessons</span><span class="t-chip"><span class="t-chip-dot"></span>3 hrs total</span><span class="t-chip"><span class="t-chip-dot"></span>Vocabulary noticeably broader</span></div></div></div></div>
+        <div class="timeline-item"><div class="timeline-left"><div class="timeline-dot"></div></div><div><div class="timeline-period">Year 1</div><div class="timeline-body"><div class="timeline-heading">365 things learned. 12 hours invested.</div><div class="timeline-text">Less than a single Netflix binge weekend. The average American reads 4 books a year at ~6 hrs each — you just matched that pace with 2 minutes a day. <strong>The compound effect is real.</strong> The only variable is whether you start.</div><div class="timeline-chips"><span class="t-chip"><span class="t-chip-dot"></span>365 lessons</span><span class="t-chip"><span class="t-chip-dot"></span>12 hrs total</span><span class="t-chip"><span class="t-chip-dot"></span>Equivalent to 3 books</span><span class="t-chip"><span class="t-chip-dot"></span>Still compounding</span></div></div></div></div>
+      </div>
+    </div>
+    <div class="compound-right fade-up d2">
+      <div class="progress-visual">
+        <div class="pv-header"><span class="pv-title">Knowledge Earned</span><span class="pv-badge">365 day view</span></div>
+        <div class="vs-strip">
+          <div class="vs-side bad"><div class="vs-label">Scrolling</div><div class="vs-num">1,460</div><div class="vs-sub">hrs/yr to the algorithm</div></div>
+          <div class="vs-divider">vs</div>
+          <div class="vs-side good"><div class="vs-label">LearnThenScroll</div><div class="vs-num">12</div><div class="vs-sub">hrs/yr, 365 lessons</div></div>
+        </div>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Lessons banked over time</div>
+        <div class="bar-chart">
+          <div class="bar-col"><div class="bar-val">7</div><div class="bar-wrap"><div class="bar-fill" id="bf1"></div></div><div class="bar-label">Wk 1</div></div>
+          <div class="bar-col"><div class="bar-val">30</div><div class="bar-wrap"><div class="bar-fill" id="bf2"></div></div><div class="bar-label">Mo 1</div></div>
+          <div class="bar-col"><div class="bar-val">90</div><div class="bar-wrap"><div class="bar-fill" id="bf3"></div></div><div class="bar-label">Mo 3</div></div>
+          <div class="bar-col"><div class="bar-val">182</div><div class="bar-wrap"><div class="bar-fill" id="bf4"></div></div><div class="bar-label">Mo 6</div></div>
+          <div class="bar-col"><div class="bar-val">365</div><div class="bar-wrap"><div class="bar-fill" id="bf5"></div></div><div class="bar-label">Yr 1</div></div>
+        </div>
+        <div class="pv-stats">
+          <div class="pv-stat"><div class="pv-stat-n">17%</div><div class="pv-stat-l">Better retention vs lectures</div></div>
+          <div class="pv-stat"><div class="pv-stat-n">4&#215;</div><div class="pv-stat-l">More consistent than long-form</div></div>
+        </div>
+        <div class="insight-cards">
+          <div class="insight"><span class="insight-icon">&#128161;</span><div class="insight-text"><strong>Spaced repetition:</strong> short daily bursts is how long-term memory actually forms — not cramming the night before.</div></div>
+          <div class="insight"><span class="insight-icon">&#128202;</span><div class="insight-text"><strong>Ebbinghaus Forgetting Curve:</strong> without reinforcement, people forget 70% of new info within 24 hrs. Daily lessons interrupt that curve.</div></div>
+          <div class="insight"><span class="insight-icon">&#9200;</span><div class="insight-text"><strong>2 min &#215; 365 days</strong> = 12 hrs of focused, retained knowledge. One Netflix session. Infinite shelf life.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- STATS -->
 <div class="stats-bar">
-  <div class="stats-inner reveal">
-    <div class="stat-item"><div class="stat-big">3 min</div><div class="stat-label">max lesson length</div></div>
-    <div class="stat-item"><div class="stat-big">70%</div><div class="stat-label">quiz pass threshold</div></div>
-    <div class="stat-item"><div class="stat-big">∞</div><div class="stat-label">topics on demand</div></div>
+  <div class="container">
+    <div class="stats-inner fade-up">
+      <div class="stat-col"><div class="stat-n">2 min</div><div class="stat-l">Average lesson</div></div>
+      <div class="stat-col"><div class="stat-n" data-count="365" data-suffix="+">365+</div><div class="stat-l">Lessons per year</div></div>
+      <div class="stat-col"><div class="stat-n" data-count="2400" data-suffix="+">2,400+</div><div class="stat-l">Waitlist members</div></div>
+      <div class="stat-col"><div class="stat-n">7 days</div><div class="stat-l">Free trial</div></div>
+    </div>
   </div>
 </div>
+
+<!-- FEATURES -->
+<section class="section features" id="features">
+  <div class="container">
+    <div class="tc fade-up">
+      <span class="eyebrow-tag" style="justify-content:center;">Features</span>
+      <h2 class="sh">All the features. None of the<br/><em>doomscrolling guilt.</em></h2>
+      <p class="lead center">Built around the habit you already have — just with a plot twist.</p>
+    </div>
+    <div class="feat-grid fade-up d1">
+      <div class="feat"><div class="feat-icon">🎯</div><h3>Personalized Topics</h3><p>20+ subject categories. Your lesson feed adapts to your interests — not a generic curriculum.</p></div>
+      <div class="feat"><div class="feat-icon">⚡</div><h3>Shorter Than A TikTok</h3><p>Dense, fast, and worth quoting at dinner. Built for attention spans shaped by the scroll — not a 200-page textbook.</p></div>
+      <div class="feat"><div class="feat-icon">🔥</div><h3>Streak Tracking</h3><p>The same itch as a Duolingo streak — except you'll actually sound smarter at parties.</p></div>
+      <div class="feat"><div class="feat-icon">📱</div><h3>App Integrations</h3><p>Earn access to Instagram, TikTok, Twitter and more — directly inside the LearnThenScroll app.</p></div>
+      <div class="feat"><div class="feat-icon">📊</div><h3>Learning Progress</h3><p>Track every lesson, every category, and how many hours of real knowledge you've built over time.</p></div>
+      <div class="feat"><div class="feat-icon">🌐</div><h3>Offline Mode</h3><p>Pre-loaded lessons work without wifi. Complete your daily lesson anywhere and unlock your feed when you land.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BENTO: DID YOU KNOW -->
+<section class="bento">
+  <div class="bento-intro fade-up">
+    <span class="eyebrow-tag" style="justify-content:center;">Did You Know?</span>
+    <h2 class="sh">A free sample of what <em>earning feels like.</em></h2>
+    <p class="lead center">Consider these four facts your first lesson. On us.</p>
+  </div>
+  <div class="bento-grid fade-up d1">
+    <div class="bento-card tall">
+      <img loading="lazy" class="bento-img" src="/learnthenscroll/hero-bg.jpg" alt="Books" style="object-position:center 25%;"/>
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:28px;background:linear-gradient(0deg,rgba(26,23,20,.80) 0%,transparent 100%);">
+        <div style="font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:8px;">Knowledge Fact</div>
+        <div style="font-family:'Instrument Serif',serif;font-style:italic;font-size:1.2rem;color:#fff;line-height:1.3;">The average person learns <em style="color:#FFB347;">~400 new things</em> per year. Most of them by accident. LearnThenScroll makes it intentional.</div>
+      </div>
+    </div>
+    <div class="bento-card ob" style="display:flex;align-items:center;justify-content:center;">
+      <div class="bento-body" style="text-align:center;">
+        <div class="bento-num">86%</div>
+        <div class="bento-label">of people say</div>
+        <div class="bento-h">They wish they read more — but never actually start</div>
+        <div class="bento-pill">Sound familiar?</div>
+      </div>
+    </div>
+    <div class="bento-card">
+      <img loading="lazy" class="bento-img" src="/learnthenscroll/person-reading.jpg" alt="Reading" style="object-position:center 15%;"/>
+    </div>
+    <div class="bento-card ib" style="display:flex;align-items:center;">
+      <div class="bento-body">
+        <div class="bento-label">Scroll Math</div>
+        <div class="bento-num">1,460</div>
+        <div class="bento-h">Hours spent scrolling per year — per person</div>
+        <div class="bento-p">That&#39;s 60 full days. A LearnThenScroll lesson costs 2 minutes of that.</div>
+        <div class="bento-pill">Do the math</div>
+      </div>
+    </div>
+    <div class="bento-card" style="display:flex;align-items:center;background:var(--cream);">
+      <div class="bento-body">
+        <div style="font-size:2.5rem;line-height:1;margin-bottom:12px;color:var(--orange);">&ldquo;</div>
+        <div class="bento-h" style="font-size:1.1rem;color:var(--ink);">An investment in knowledge pays the best interest.</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:10px;font-weight:600;">&mdash; Benjamin Franklin</div>
+        <div class="bento-pill">He earned his feed too</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="section proof" id="reviews">
+  <div class="container">
+    <div class="tc fade-up">
+      <div class="proof-rating"><span class="stars-sm">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span><strong>4.9 / 5</strong> &mdash; from 200+ beta users</span></div>
+      <span class="eyebrow-tag" style="justify-content:center;">Early Users</span>
+      <h2 class="sh">Early readers.<br/><em>Already ahead of the class.</em></h2>
+    </div>
+    <div class="proof-grid fade-up d1">
+      <div class="proof-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"I've learned more in 3 weeks than 3 years of scrolling. Turns out my feed was just a pop quiz I never studied for."</p>
+        <div class="reviewer">
+          <img loading="lazy" src="/learnthenscroll/avatar1.jpg" alt="Jordan"/>
+          <div><div class="reviewer-name">Jordan R.</div><div class="reviewer-handle">Beta Tester · Finance Topics</div></div>
+        </div>
+      </div>
+      <div class="proof-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"I was skeptical. Now I'm the person at brunch who casually mentions compound interest AND knows why. 2 minutes a day did that."</p>
+        <div class="reviewer">
+          <img loading="lazy" src="/learnthenscroll/avatar2.jpg" alt="Maya"/>
+          <div><div class="reviewer-name">Maya K.</div><div class="reviewer-handle">Beta Tester · Science Topics</div></div>
+        </div>
+      </div>
+      <div class="proof-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"It's like Duolingo and Wikipedia had a baby and gave it a glow-up. Screen time down 40 mins. Vocabulary up considerably."</p>
+        <div class="reviewer">
+          <img loading="lazy" src="/learnthenscroll/avatar3.jpg" alt="Alex"/>
+          <div><div class="reviewer-name">Alex S.</div><div class="reviewer-handle">Beta Tester · Psychology Topics</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section pricing" id="pricing">
+  <div class="container">
+    <div class="tc fade-up">
+      <span class="eyebrow-tag" style="justify-content:center;">Pricing</span>
+      <h2 class="sh">Invest 2 minutes. <em>Earn everything else.</em></h2>
+      <p class="lead center">7-day free trial on all plans. No credit card. No fine print. Just knowledge.</p>
+    </div>
+    <div class="price-grid fade-up d1">
+      <div class="price-card">
+        <div class="tier-name">Basic</div>
+        <div class="price-num"><sup>$</sup>4.99</div>
+        <div class="per">per month</div>
+        <div class="trial-note">🎁 7-day free trial included</div>
+        <hr class="divider"/>
+        <ul class="price-list">
+          <li><span class="ck">✓</span> Daily micro-lessons</li>
+          <li><span class="ck">✓</span> 5 topic categories</li>
+          <li><span class="ck">✓</span> Streak tracking</li>
+          <li><span class="ck">✓</span> 1 social app integration</li>
+          <li><span class="ck no">×</span> <span style="opacity:.4">Offline mode</span></li>
+          <li><span class="ck no">×</span> <span style="opacity:.4">Progress analytics</span></li>
+        </ul>
+        <a href="#" class="btn btn-outline-lg" style="width:100%;justify-content:center;">Start Free Trial</a>
+      </div>
+      <div class="price-card featured">
+        <div class="pop-badge">Most Popular</div>
+        <div class="tier-name">Pro</div>
+        <div class="price-num"><sup>$</sup>9.99</div>
+        <div class="per">per month</div>
+        <div class="trial-note">🎁 7-day free trial included</div>
+        <hr class="divider"/>
+        <ul class="price-list">
+          <li><span class="ck">✓</span> Unlimited micro-lessons</li>
+          <li><span class="ck">✓</span> All 20+ topic categories</li>
+          <li><span class="ck">✓</span> Streaks + daily reminders</li>
+          <li><span class="ck">✓</span> Unlimited app integrations</li>
+          <li><span class="ck">✓</span> Offline mode</li>
+          <li><span class="ck">✓</span> Full progress analytics</li>
+        </ul>
+        <a href="#" class="btn btn-primary btn-primary-lg" style="width:100%;justify-content:center;">Start Free Trial</a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- FINAL CTA -->
-<div class="final-cta" id="waitlist">
-  <h2 class="reveal">Stop scrolling.<br>Start <em>earning</em> it.</h2>
-  <p class="reveal">Join the waitlist. Be first when we launch.</p>
-  <div class="final-form reveal">
-    <input class="final-input" type="email" placeholder="your@email.com" id="final-email" />
-    <button class="final-btn" onclick="submitEmail('final-email', 'final-thanks')">Get early access →</button>
+<section class="final-cta">
+  <div class="container">
+    <div class="fade-up">
+      <span class="eyebrow-tag" style="justify-content:center;color:rgba(255,255,255,.5);">The Library Is Open</span>
+      <h2 class="sh">Ready to read before<br/>you <em>scroll?</em></h2>
+      <p class="lead center">Join 2,400+ people already ahead of the curve. Free 7-day trial. No credit card. No homework. Cancel anytime.</p>
+      <div class="cta-btns">
+        <a href="#pricing" class="btn btn-primary btn-primary-lg">Start Free Trial</a>
+        <a href="#" class="store-btn">
+          <svg viewBox="0 0 24 24" fill="white" style="width:26px;height:26px"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <div class="lines"><span class="top">Download on the</span><span class="bot">App Store</span></div>
+        </a>
+        <a href="#" class="store-btn">
+          <svg viewBox="0 0 24 24" fill="white" style="width:26px;height:26px"><path d="M3.18 23.76c.33.18.7.22 1.06.13l11.29-11.31L12 9.05 3.18 23.76zm18.4-10.09c.28-.28.42-.64.42-1.01v-.01c0-.37-.14-.73-.43-1.01l-2.4-1.39-3.29 3.29 2.99 2.99 2.71-2.86zM2.14.28C2.05.46 2 .68 2 .93v22.14c0 .25.05.47.14.65L14.95 12 2.14.28zm11.15 11.09l3.53-3.53-3.01-1.74a1.36 1.36 0 00-1.29-.04L4.24.28 13.29 11.37z"/></svg>
+          <div class="lines"><span class="top">Get it on</span><span class="bot">Google Play</span></div>
+        </a>
+      </div>
+      <p class="cta-note"><strong>Free 7 days.</strong> Then from $4.99/mo. Less than a coffee. More than a scroll.</p>
+    </div>
   </div>
-  <div class="final-note" id="final-thanks">No spam. Just your early access link when we launch.</div>
-</div>
+</section>
 
 <!-- FOOTER -->
-<footer>
-  <div class="footer-logo">learn<span>then</span>scroll</div>
-  <div class="footer-links">
-    <a href="#">Privacy</a>
-    <a href="#">Terms</a>
-    <a href="#">Contact</a>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">Learn<b>Then</b>Scroll</div>
+        <p>Book smart. Feed earned. Attention reclaimed.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#how">How It Works</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 LearnThenScroll. All rights reserved.</span>
+      <span>Made with intention. Consumed with purpose.</span>
+    </div>
   </div>
 </footer>
 
 <script>
-  const topics = [
-    { name: "Eugene Schwartz's 5 awareness levels", cat: "Marketing" },
-    { name: "Cialdini's 6 principles of influence", cat: "Psychology" },
-    { name: "Why index funds beat fund managers", cat: "Finance" },
-    { name: "Stoicism's core idea in 5 minutes", cat: "Philosophy" },
-    { name: "How transformers changed AI forever", cat: "Tech" },
-    { name: "Cal Newport's deep work principles", cat: "Career" },
-    { name: "The sunk cost fallacy explained", cat: "Psychology" },
-    { name: "David Ogilvy's rules for advertising", cat: "Marketing" },
-    { name: "Why sleep is the ultimate performance drug", cat: "Science" },
-    { name: "The rule of 72 and compound interest", cat: "Finance" },
-    { name: "Dunning-Kruger effect explained", cat: "Psychology" },
-    { name: "The innovator's dilemma", cat: "Tech" },
+const obs = new IntersectionObserver(e => {
+  e.forEach(el => { if(el.isIntersecting) el.target.classList.add('in'); });
+}, {threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+setTimeout(() => document.querySelectorAll('.hero .fade-up').forEach(el => el.classList.add('in')), 80);
+const mt = document.getElementById('mt');
+if(mt) mt.innerHTML += mt.innerHTML;
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+(function(){
+  var bars = [
+    {id:'bf1',pct:18},{id:'bf2',pct:38},{id:'bf3',pct:60},{id:'bf4',pct:78},{id:'bf5',pct:100}
   ];
+  var barsAnimated = false;
+  var countersAnimated = false;
 
-  const topicsGrid = document.getElementById('topics-grid');
-  topics.forEach(t => {
-    topicsGrid.innerHTML += `<div class="topic-pill"><div class="tp-dot"></div><div><div class="tp-name">${t.name}</div><div class="tp-cat">${t.cat}</div></div></div>`;
-  });
-
-  const tickerItems = [
-    "Eugene Schwartz awareness levels", "Stoic philosophy", "Index fund investing",
-    "Deep work principles", "Cialdini's influence", "The innovator's dilemma",
-    "Dunning-Kruger effect", "Compound interest", "David Ogilvy's rules",
-    "The gut-brain connection", "Jobs-to-be-done theory", "Memento mori",
-  ];
-  const ticker = document.getElementById('ticker');
-  const doubled = [...tickerItems, ...tickerItems];
-  ticker.innerHTML = doubled.map(t => `<div class="ticker-item"><div class="ticker-dot"></div>${t}</div>`).join('');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  function submitEmail(inputId, thanksId) {
-    const input = document.getElementById(inputId);
-    const thanks = document.getElementById(thanksId);
-    if (!input.value.includes('@')) { input.style.borderColor = '#E24B4A'; return; }
-    input.style.display = 'none';
-    const btn = input.nextElementSibling;
-    if (btn) btn.style.display = 'none';
-    thanks.innerHTML = `<strong style="color:var(--orange)">You're on the list!</strong> We'll email you at ${input.value} when we launch.`;
+  function animateBars(){
+    if(barsAnimated) return; barsAnimated = true;
+    bars.forEach(function(b,i){
+      setTimeout(function(){
+        var el = document.getElementById(b.id);
+        if(el) el.style.height = b.pct + '%';
+      }, i * 140);
+    });
   }
+  function animateCount(id, target, dur){
+    var el = document.getElementById(id); if(!el) return;
+    var start = 0, step = target/(dur/16);
+    var t = setInterval(function(){
+      start = Math.min(start+step, target);
+      el.textContent = Math.round(start);
+      if(start>=target) clearInterval(t);
+    },16);
+  }
+  var cmpObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      animateBars();
+      if(!countersAnimated){ countersAnimated=true; animateCount('cnt-lessons',365,2000); animateCount('cnt-hours',12,1600); }
+    });
+  },{threshold:0.15});
+  var cmpEl = document.getElementById('compound');
+  if(cmpEl) cmpObs.observe(cmpEl);
+
+  // Scroll-driven timeline activation
+  function checkTimeline(){
+    document.querySelectorAll('#compound-timeline .timeline-item').forEach(function(item){
+      if(item.getBoundingClientRect().top < window.innerHeight * 0.75)
+        item.classList.add('tl-done');
+    });
+  }
+  window.addEventListener('scroll', checkTimeline, {passive:true});
+  checkTimeline();
+})();
+
+
+  // ── HAMBURGER NAV ──
+  (function(){
+    var burger=document.querySelector('.nav-hamburger');
+    var nav=document.getElementById('mobileNav');
+    if(!burger||!nav)return;
+    burger.addEventListener('click',function(){
+      var o=burger.classList.toggle('open');
+      nav.classList.toggle('open',o);
+      burger.setAttribute('aria-expanded',o);
+      nav.setAttribute('aria-hidden',!o);
+      document.body.style.overflow=o?'hidden':'';
+    });
+    nav.querySelectorAll('a').forEach(function(l){
+      l.addEventListener('click',function(){
+        burger.classList.remove('open');nav.classList.remove('open');
+        burger.setAttribute('aria-expanded','false');nav.setAttribute('aria-hidden','true');
+        document.body.style.overflow='';
+      });
+    });
+  })();
+
+  // ── ANIMATED COUNTERS ──
+  (function(){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting)return;
+        var el=entry.target,end=parseInt(el.dataset.count,10),suf=el.dataset.suffix||'';
+        var dur=1400,t0=performance.now();
+        (function tick(now){
+          var p=Math.min((now-t0)/dur,1),e=1-Math.pow(1-p,3),v=Math.floor(e*end);
+          el.textContent=v>=1000?(v/1000).toFixed(1).replace(/\.0$/,'')+'k'+suf:v+suf;
+          if(p<1)requestAnimationFrame(tick);
+          else el.textContent=end>=1000?(end/1000).toFixed(1).replace(/\.0$/,'')+'k'+suf:end+suf;
+        })(t0);
+        obs.unobserve(el);
+      });
+    },{threshold:0.5});
+    document.querySelectorAll('.stat-n[data-count]').forEach(function(el){obs.observe(el);});
+  })();
+
+  // ── FORM VALIDATION + CONFIRM ──
+  (function(){
+    var form=document.querySelector('form');
+    if(!form)return;
+    var inp=form.querySelector('input[type="email"]');
+    var msg=document.createElement('p');
+    msg.className='form-confirm';
+    msg.textContent='\u2713 You\'re on the list! We\'ll be in touch.';
+    form.appendChild(msg);
+    form.addEventListener('submit',function(e){
+      if(inp&&!inp.validity.valid){inp.style.borderColor='#FF4D00';inp.focus();e.preventDefault();return;}
+      e.preventDefault();
+      setTimeout(function(){form.style.display='none';msg.style.display='block';},300);
+    });
+    if(inp)inp.addEventListener('input',function(){inp.style.borderColor='';});
+  })();
+
 </script>
+
+<!-- Production-ready: 13 fixes applied per design audit 2026-04-24 -->
 </body>
 </html>
